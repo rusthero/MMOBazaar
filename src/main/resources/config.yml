@@ -1,0 +1,34 @@
+bazaar:
+  max-per-player: 3
+  creation-fee: 1000.0
+  extension-fee: 1000.0
+
+storage:
+  engine: sqlite # mysql, mariadb, postgres
+
+  sqlite:
+    file: "data.db"
+
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "mmobazaar"
+    username: "root"
+    password: "123456"
+    useSSL: false
+
+  mariadb:
+    host: "localhost"
+    port: 3306
+    database: "mmobazaar"
+    username: "root"
+    password: "123456"
+    useSSL: false
+
+  postgres:
+    host: "localhost"
+    port: 5432
+    database: "mmobazaar"
+    username: "postgres"
+    password: "123456"
+    useSSL: false
