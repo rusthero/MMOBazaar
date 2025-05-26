@@ -9,11 +9,11 @@ import java.util.UUID;
 public interface BazaarStorage {
     void init();
 
-    void saveBazaar(BazaarData data);
+    boolean saveBazaar(BazaarData data);
 
-    void deleteBazaar(UUID bazaarId);
+    boolean deleteBazaar(UUID bazaarId);
 
-    void saveAll(Collection<BazaarData> bazaars);
+    boolean saveAll(Collection<BazaarData> bazaars);
 
     Optional<BazaarData> loadBazaar(UUID bazaarId);
 

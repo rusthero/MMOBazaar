@@ -67,7 +67,7 @@ public class SQLiteStorage implements BazaarStorage {
     }
 
     @Override
-    public void saveBazaar(BazaarData data) {
+    public boolean saveBazaar(BazaarData data) {
         String sql = """
                     INSERT OR REPLACE INTO bazaars (
                         id, owner, name, world, x, y, z, yaw,
@@ -120,12 +120,16 @@ public class SQLiteStorage implements BazaarStorage {
             }
 
             listingStmt.executeBatch();
+
+            return true;
         } catch (IllegalStateException | SQLException e) {
             plugin.getLogger().severe("Failed to save bazaar [" + data.getName() + " / " + data.getId() + "]: " + e.getMessage());
             for (StackTraceElement el : e.getStackTrace()) {
                 plugin.getLogger().severe("  at " + el.toString());
             }
         }
+
+        return false;
     }
 
     private byte[] serializeItem(ItemStack item) {
@@ -139,7 +143,7 @@ public class SQLiteStorage implements BazaarStorage {
     }
 
     @Override
-    public void deleteBazaar(UUID bazaarId) {
+    public boolean deleteBazaar(UUID bazaarId) {
         String deleteListingsSql = "DELETE FROM listings WHERE bazaar_id = ?";
         String deleteBazaarSql = "DELETE FROM bazaars WHERE id = ?";
 
@@ -149,13 +153,17 @@ public class SQLiteStorage implements BazaarStorage {
 
             stmt2.setString(1, bazaarId.toString());
             stmt2.executeUpdate();
+
+            return true;
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to delete bazaar: " + e.getMessage());
         }
+
+        return false;
     }
 
     @Override
-    public void saveAll(Collection<BazaarData> bazaars) {
+    public boolean saveAll(Collection<BazaarData> bazaars) {
         String sqlBazaar = """
                     INSERT OR REPLACE INTO bazaars (
                         id, owner, name, world, x, y, z, yaw, created_at,
@@ -208,9 +216,13 @@ public class SQLiteStorage implements BazaarStorage {
 
             psBazaar.executeBatch();
             psListing.executeBatch();
+
+            return true;
         } catch (Exception e) {
             plugin.getLogger().severe("[MMOBazaar] Failed to bulk-save bazaars: " + e.getMessage());
         }
+
+        return false;
     }
 
     @Override

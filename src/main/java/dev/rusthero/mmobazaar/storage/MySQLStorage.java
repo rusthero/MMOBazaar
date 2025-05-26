@@ -68,7 +68,7 @@ public class MySQLStorage implements BazaarStorage {
     }
 
     @Override
-    public void saveBazaar(BazaarData data) {
+    public boolean saveBazaar(BazaarData data) {
         String sql = """
                     INSERT INTO bazaars (
                         id, owner, name, world, x, y, z, yaw,
@@ -144,6 +144,8 @@ public class MySQLStorage implements BazaarStorage {
                 listingStmt.executeBatch();
 
                 conn.commit();
+
+                return true;
             } catch (IllegalStateException | SQLException e) {
                 conn.rollback();
 
@@ -157,6 +159,8 @@ public class MySQLStorage implements BazaarStorage {
         } catch (Exception e) {
             plugin.getLogger().severe("[MMOBazaar] Failed to connect to database: " + e.getMessage());
         }
+
+        return false;
     }
 
     private byte[] serializeItem(ItemStack item) {
@@ -170,18 +174,22 @@ public class MySQLStorage implements BazaarStorage {
     }
 
     @Override
-    public void deleteBazaar(UUID bazaarId) {
+    public boolean deleteBazaar(UUID bazaarId) {
         String deleteBazaarSql = "DELETE FROM bazaars WHERE id = ?";
         try (Connection conn = dataSource.getConnection(); PreparedStatement stmt2 = conn.prepareStatement(deleteBazaarSql)) {
             stmt2.setString(1, bazaarId.toString());
             stmt2.executeUpdate();
+
+            return true;
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to delete bazaar: " + e.getMessage());
         }
+
+        return false;
     }
 
     @Override
-    public void saveAll(Collection<BazaarData> bazaars) {
+    public boolean saveAll(Collection<BazaarData> bazaars) {
         String sqlBazaar = """
                     INSERT INTO bazaars (
                         id, owner, name, world, x, y, z, yaw,
@@ -258,6 +266,8 @@ public class MySQLStorage implements BazaarStorage {
                 psListing.executeBatch();
 
                 conn.commit();
+
+                return true;
             } catch (Exception e) {
                 conn.rollback();
                 plugin.getLogger().severe("[MMOBazaar] Failed to bulk-save bazaars: " + e.getMessage());
@@ -267,6 +277,8 @@ public class MySQLStorage implements BazaarStorage {
         } catch (Exception e) {
             plugin.getLogger().severe("[MMOBazaar] Failed to connect to database: " + e.getMessage());
         }
+
+        return false;
     }
 
     @Override
