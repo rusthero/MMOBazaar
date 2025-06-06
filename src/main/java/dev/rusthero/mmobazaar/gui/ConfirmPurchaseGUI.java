@@ -57,12 +57,8 @@ public class ConfirmPurchaseGUI {
             lore.add("§eClick to confirm purchase");
             pMeta.setLore(lore);
 
-            // Only set name if already exists
-            if (pMeta.hasDisplayName()) {
-                preview.setItemMeta(pMeta);
-            } else {
-                preview.setItemMeta(pMeta);
-            }
+            // Apply the customized meta to the preview item
+            preview.setItemMeta(pMeta);
         }
         gui.setItem(4, preview);
 
