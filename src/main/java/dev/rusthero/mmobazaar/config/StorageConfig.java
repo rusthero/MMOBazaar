@@ -44,6 +44,7 @@ public class StorageConfig {
     }
 
     public @NotNull HikariConfig getHikariConfig() {
+        var section = getSubSection();
         if (engine == SQLITE) {
             plugin.getDataFolder().mkdirs();
             String filePath = section.getString("file", "data.db");
@@ -56,7 +57,6 @@ public class StorageConfig {
             return hikari;
         }
 
-        var section = getSubSection();
         String host = section.getString("host", "localhost");
         String database = section.getString("database", "mmobazaar");
         String user = section.getString("username", "root");
