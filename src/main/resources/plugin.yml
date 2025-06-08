@@ -10,7 +10,7 @@ softdepend: [Vault]
 commands:
   mmobazaar:
     description: MMOBazaar admin commands
-    usage: /<command> give <player>
+    usage: /<command> give <player> [amount]
     permission: mmobazaar.admin
 permissions:
   mmobazaar.admin:
