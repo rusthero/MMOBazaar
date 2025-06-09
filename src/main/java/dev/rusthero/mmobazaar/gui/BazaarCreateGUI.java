@@ -1,6 +1,7 @@
 package dev.rusthero.mmobazaar.gui;
 
 import dev.rusthero.mmobazaar.MMOBazaarContext;
+import dev.rusthero.mmobazaar.logic.BazaarCreationValidator;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
@@ -34,25 +35,23 @@ public class BazaarCreateGUI {
                 return List.of(AnvilGUI.ResponseAction.close());
             }
 
-            double balance = context.vaultHook.getEconomy().getBalance(player);
-            double creationFee = context.config.getCreationFee();
-            if (balance < creationFee) {
-                player.sendMessage("§cYou need at least §f$" + creationFee + " §cto open a bazaar.");
-                return List.of(AnvilGUI.ResponseAction.close());
+            BazaarCreationValidator.Result result = BazaarCreationValidator.canCreate(context, player);
+            switch (result) {
+                case MISSING_BAZAAR_BAG -> {
+                    player.sendMessage("§cYou need a bazaar bag to open bazaar");
+                    return List.of(AnvilGUI.ResponseAction.close());
+                }
+                case INSUFFICIENT_FUNDS -> {
+                    player.sendMessage("§cYou need at least §f$" + context.config.getCreationFee() + " §cto open a bazaar.");
+                    return List.of(AnvilGUI.ResponseAction.close());
+                }
+                case BAZAAR_LIMIT_REACHED -> {
+                    player.sendMessage("§cYou cannot have more than " + context.config.getMaxBazaarsPerPlayer() + " bazaars.");
+                    return List.of(AnvilGUI.ResponseAction.close());
+                }
             }
 
-            if (bag.getAmount() < 1) {
-                player.sendMessage("§cYou need a bazaar bag to open bazaar");
-                return List.of(AnvilGUI.ResponseAction.close());
-            }
-
-            int bazaarAmount = context.bazaarManager.getBazaarsByOwner(player.getUniqueId()).size();
-            if (bazaarAmount >= context.config.getMaxBazaarsPerPlayer()) {
-                player.sendMessage("§cYou cannot have more than " + bazaarAmount + " bazaars.");
-                return List.of(AnvilGUI.ResponseAction.close());
-            }
-
-            EconomyResponse withdraw = context.vaultHook.getEconomy().withdrawPlayer(player, creationFee);
+            EconomyResponse withdraw = context.vaultHook.getEconomy().withdrawPlayer(player, context.config.getCreationFee());
             if (!withdraw.transactionSuccess()) {
                 player.sendMessage("§cTransaction failed, check your funds");
                 return List.of(AnvilGUI.ResponseAction.close());
@@ -61,7 +60,7 @@ public class BazaarCreateGUI {
             return context.bazaarManager.createBazaar(player, name).map(data -> List.of(AnvilGUI.ResponseAction.run(() -> {
                 completed.add(player.getUniqueId());
                 bag.setAmount(bag.getAmount() - 1);
-                player.sendMessage("§aBazaar created and §f$" + creationFee + " §awithdrawn.");
+                player.sendMessage("§aBazaar created and §f$" + context.config.getCreationFee() + " §awithdrawn.");
             }), AnvilGUI.ResponseAction.close())).orElseGet(() -> {
                 player.sendMessage("§cFailed to create bazaar.");
                 return List.of(AnvilGUI.ResponseAction.close());
