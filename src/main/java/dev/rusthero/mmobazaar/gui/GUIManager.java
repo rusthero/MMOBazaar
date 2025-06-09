@@ -51,8 +51,8 @@ public class GUIManager {
     }
 
     public void closeCustomerAndConfirmGUIsForAllPlayers(BazaarData bazaar) {
-        sessions.customer.closeAllFor(bazaar.getId());
-        sessions.confirm.closeAllFor(bazaar.getId());
+        sessions.customer.closeForAllPlayers(bazaar.getId());
+        sessions.confirm.closeForAllPlayers(bazaar.getId());
     }
 
     public void closeAllGUIs() {
