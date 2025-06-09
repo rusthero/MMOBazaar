@@ -1,7 +1,7 @@
 package dev.rusthero.mmobazaar.listener;
 
 import dev.rusthero.mmobazaar.MMOBazaarContext;
-import dev.rusthero.mmobazaar.gui.CreateGUI;
+import dev.rusthero.mmobazaar.gui.component.CreateGUI;
 import dev.rusthero.mmobazaar.logic.BazaarCreationValidator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

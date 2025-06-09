@@ -4,7 +4,7 @@ import dev.rusthero.mmobazaar.api.MMOBazaarAPI;
 import dev.rusthero.mmobazaar.config.BazaarConfig;
 import dev.rusthero.mmobazaar.economy.VaultHook;
 import dev.rusthero.mmobazaar.bazaar.BazaarManager;
-import dev.rusthero.mmobazaar.gui.api.GUIManager;
+import dev.rusthero.mmobazaar.gui.GUIManager;
 import dev.rusthero.mmobazaar.gui.session.GUISessionManager;
 import dev.rusthero.mmobazaar.item.BazaarBagFactory;
 import dev.rusthero.mmobazaar.storage.api.BazaarStorage;

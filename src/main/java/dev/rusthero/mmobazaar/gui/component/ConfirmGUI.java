@@ -1,8 +1,10 @@
-package dev.rusthero.mmobazaar.gui;
+package dev.rusthero.mmobazaar.gui.component;
 
 import dev.rusthero.mmobazaar.MMOBazaarContext;
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
 import dev.rusthero.mmobazaar.bazaar.BazaarListing;
+import dev.rusthero.mmobazaar.gui.api.BazaarGUI;
+import dev.rusthero.mmobazaar.gui.api.ClickableGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

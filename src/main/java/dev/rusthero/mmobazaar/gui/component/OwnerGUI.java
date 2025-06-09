@@ -1,8 +1,11 @@
-package dev.rusthero.mmobazaar.gui;
+package dev.rusthero.mmobazaar.gui.component;
 
 import dev.rusthero.mmobazaar.MMOBazaarContext;
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
 import dev.rusthero.mmobazaar.bazaar.BazaarListing;
+import dev.rusthero.mmobazaar.gui.api.BazaarGUI;
+import dev.rusthero.mmobazaar.gui.api.ClickableGUI;
+import dev.rusthero.mmobazaar.gui.api.DraggableGUI;
 import dev.rusthero.mmobazaar.item.util.ListingLoreUtil;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;

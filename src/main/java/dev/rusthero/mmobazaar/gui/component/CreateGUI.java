@@ -1,4 +1,4 @@
-package dev.rusthero.mmobazaar.gui;
+package dev.rusthero.mmobazaar.gui.component;
 
 import dev.rusthero.mmobazaar.MMOBazaarContext;
 import dev.rusthero.mmobazaar.logic.BazaarCreationValidator;

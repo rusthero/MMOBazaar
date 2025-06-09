@@ -1,10 +1,10 @@
-package dev.rusthero.mmobazaar.gui.api;
+package dev.rusthero.mmobazaar.gui;
 
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
 import dev.rusthero.mmobazaar.bazaar.BazaarListing;
-import dev.rusthero.mmobazaar.gui.ConfirmGUI;
-import dev.rusthero.mmobazaar.gui.CustomerGUI;
-import dev.rusthero.mmobazaar.gui.OwnerGUI;
+import dev.rusthero.mmobazaar.gui.component.ConfirmGUI;
+import dev.rusthero.mmobazaar.gui.component.CustomerGUI;
+import dev.rusthero.mmobazaar.gui.component.OwnerGUI;
 import dev.rusthero.mmobazaar.gui.session.GUISessionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package dev.rusthero.mmobazaar.gui;
+package dev.rusthero.mmobazaar.gui.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

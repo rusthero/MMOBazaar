@@ -1,4 +1,4 @@
-package dev.rusthero.mmobazaar.gui;
+package dev.rusthero.mmobazaar.gui.api;
 
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
 

@@ -1,6 +1,6 @@
 package dev.rusthero.mmobazaar.gui.session;
 
-import dev.rusthero.mmobazaar.gui.ConfirmGUI;
+import dev.rusthero.mmobazaar.gui.component.ConfirmGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
