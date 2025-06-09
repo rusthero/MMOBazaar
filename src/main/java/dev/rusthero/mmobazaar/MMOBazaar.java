@@ -10,10 +10,10 @@ import dev.rusthero.mmobazaar.economy.VaultHook;
 import dev.rusthero.mmobazaar.gui.GUISessionManager;
 import dev.rusthero.mmobazaar.item.BazaarBagFactory;
 import dev.rusthero.mmobazaar.listener.BazaarBagUseListener;
-import dev.rusthero.mmobazaar.listener.BazaarInteractionListener;
 import dev.rusthero.mmobazaar.listener.BazaarGUIListener;
-import dev.rusthero.mmobazaar.storage.BazaarStorage;
-import dev.rusthero.mmobazaar.storage.StorageFactory;
+import dev.rusthero.mmobazaar.listener.BazaarInteractionListener;
+import dev.rusthero.mmobazaar.storage.api.BazaarStorage;
+import dev.rusthero.mmobazaar.storage.util.SQLStorageFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -54,8 +54,13 @@ public class MMOBazaar extends JavaPlugin {
         final StorageConfig storageConfig = new StorageConfig(this, storageSection);
 
         // Load storage
-        StorageFactory storageFactory = new StorageFactory(this);
-        BazaarStorage storage = storageFactory.create(storageConfig);
+        SQLStorageFactory storageFactory = new SQLStorageFactory(getLogger());
+        BazaarStorage storage = null;
+        try {
+            storage = storageFactory.create(storageConfig);
+        } catch (ClassNotFoundException e) {
+            getLogger().severe("Loading JDBC (database) classes failed");
+        }
         if (storage == null) {
             getLogger().severe("Disabling plugin due to missing storage backend.");
             getServer().getPluginManager().disablePlugin(this);
@@ -63,13 +68,14 @@ public class MMOBazaar extends JavaPlugin {
         }
         storage.init();
 
-        // Load bazaars from storage
-        Collection<BazaarData> loadedBazaars = storage.loadAll();
-        getLogger().info("Loaded " + loadedBazaars.size() + " bazaars from database.");
-
         // Setup MMOBazaar
         final BazaarManager bazaarManager = new BazaarManager(this, storage);
-        loadedBazaars.forEach(bazaarManager::registerBazaar);
+
+        // Load bazaars from storage
+        storage.loadAllBazaars().ifPresent(loadedBazaars -> {
+            getLogger().info("Loaded " + loadedBazaars.size() + " bazaars from database.");
+            loadedBazaars.forEach(bazaarManager::registerBazaar);
+        });
 
         final BazaarBagFactory bagFactory = new BazaarBagFactory(config.getCreationFee());
         final MMOBazaarAPI api = new MMOBazaarAPI(bagFactory);
@@ -108,7 +114,7 @@ public class MMOBazaar extends JavaPlugin {
         if (this.context != null && this.context.storage != null) {
             try {
                 Collection<BazaarData> bazaars = this.context.bazaarManager.getAllBazaars();
-                this.context.storage.saveAll(bazaars);
+                this.context.storage.saveAllBazaars(bazaars);
                 getLogger().info("Saved all " + bazaars.size() + " bazaars to storage.");
             } catch (Exception e) {
                 getLogger().severe("Failed to save bazaars on shutdown: " + e.getMessage());

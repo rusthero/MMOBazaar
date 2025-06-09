@@ -5,7 +5,7 @@ import dev.rusthero.mmobazaar.bazaar.BazaarData;
 import dev.rusthero.mmobazaar.bazaar.BazaarListing;
 import dev.rusthero.mmobazaar.gui.BazaarOwnerGUI;
 import dev.rusthero.mmobazaar.gui.ConfirmPurchaseGUI;
-import dev.rusthero.mmobazaar.util.ListingLoreUtil;
+import dev.rusthero.mmobazaar.item.util.ListingLoreUtil;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

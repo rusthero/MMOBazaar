@@ -1,7 +1,7 @@
 package dev.rusthero.mmobazaar.bazaar;
 
 import dev.rusthero.mmobazaar.MMOBazaar;
-import dev.rusthero.mmobazaar.storage.BazaarStorage;
+import dev.rusthero.mmobazaar.storage.api.BazaarStorage;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;

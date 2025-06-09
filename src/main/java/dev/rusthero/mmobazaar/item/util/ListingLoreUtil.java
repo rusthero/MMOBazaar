@@ -1,4 +1,4 @@
-package dev.rusthero.mmobazaar.util;
+package dev.rusthero.mmobazaar.item.util;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

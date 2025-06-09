@@ -6,7 +6,7 @@ import dev.rusthero.mmobazaar.economy.VaultHook;
 import dev.rusthero.mmobazaar.bazaar.BazaarManager;
 import dev.rusthero.mmobazaar.gui.GUISessionManager;
 import dev.rusthero.mmobazaar.item.BazaarBagFactory;
-import dev.rusthero.mmobazaar.storage.BazaarStorage;
+import dev.rusthero.mmobazaar.storage.api.BazaarStorage;
 
 public class MMOBazaarContext {
     public final MMOBazaar plugin;
