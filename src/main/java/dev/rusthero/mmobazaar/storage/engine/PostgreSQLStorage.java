@@ -30,7 +30,7 @@ public class PostgreSQLStorage extends SQLStorage {
 
     @Override
     public boolean saveAllBazaars(Collection<BazaarData> bazaars) {
-        return runTransaction(conn -> batchInsertBazaars(conn, bazaars, SQLSchema.PostgreSQL.INSERT_BAZAAR, SQLSchema.PostgreSQL.INSERT_BAZAAR));
+        return runTransaction(conn -> batchInsertBazaars(conn, bazaars, SQLSchema.PostgreSQL.INSERT_BAZAAR, SQLSchema.PostgreSQL.INSERT_LISTING));
     }
 
     @Override
