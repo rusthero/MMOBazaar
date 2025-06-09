@@ -14,8 +14,8 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 public class GUIManager {
     private final GUISessionManager sessions;
 
-    public GUIManager(GUISessionManager sessions) {
-        this.sessions = sessions;
+    public GUIManager() {
+        this.sessions = new GUISessionManager();
     }
 
     public void openOwnerGUI(Player player, OwnerGUI gui) {

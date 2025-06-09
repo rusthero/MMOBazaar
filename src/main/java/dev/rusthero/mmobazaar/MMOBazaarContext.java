@@ -14,18 +14,16 @@ public class MMOBazaarContext {
     public final BazaarManager bazaarManager;
     public final BazaarBagFactory bagFactory;
     public final MMOBazaarAPI api;
-    public final GUISessionManager guiSessions;
     public final GUIManager gui;
     public final BazaarConfig config;
     public final BazaarStorage storage;
 
-    public MMOBazaarContext(MMOBazaar plugin, VaultHook vaultHook, BazaarManager manager, BazaarBagFactory bagFactory, MMOBazaarAPI api, GUISessionManager guiSessions, GUIManager gui, BazaarConfig config, BazaarStorage storage) {
+    public MMOBazaarContext(MMOBazaar plugin, VaultHook vaultHook, BazaarManager manager, BazaarBagFactory bagFactory, MMOBazaarAPI api, GUIManager gui, BazaarConfig config, BazaarStorage storage) {
         this.plugin = plugin;
         this.vaultHook = vaultHook;
         this.bazaarManager = manager;
         this.bagFactory = bagFactory;
         this.api = api;
-        this.guiSessions = guiSessions;
         this.gui = gui;
         this.config = config;
         this.storage = storage;

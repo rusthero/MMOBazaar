@@ -7,11 +7,10 @@ import dev.rusthero.mmobazaar.config.BazaarConfig;
 import dev.rusthero.mmobazaar.config.StorageConfig;
 import dev.rusthero.mmobazaar.economy.VaultHook;
 import dev.rusthero.mmobazaar.gui.GUIManager;
-import dev.rusthero.mmobazaar.gui.session.GUISessionManager;
 import dev.rusthero.mmobazaar.item.BazaarBagFactory;
 import dev.rusthero.mmobazaar.listener.BazaarBagUseListener;
-import dev.rusthero.mmobazaar.listener.GUIListener;
 import dev.rusthero.mmobazaar.listener.BazaarInteractionListener;
+import dev.rusthero.mmobazaar.listener.GUIListener;
 import dev.rusthero.mmobazaar.storage.api.BazaarStorage;
 import dev.rusthero.mmobazaar.storage.util.SQLStorageFactory;
 import org.bukkit.NamespacedKey;
@@ -77,11 +76,10 @@ public class MMOBazaar extends JavaPlugin {
 
         final BazaarBagFactory bagFactory = new BazaarBagFactory(config.getCreationFee());
         final MMOBazaarAPI api = new MMOBazaarAPI(bagFactory);
-        final GUISessionManager guiSessions = new GUISessionManager();
-        final GUIManager gui = new GUIManager(guiSessions);
+        final GUIManager gui = new GUIManager();
 
         // Setup context bundle for easier access to MMOBazaar
-        context = new MMOBazaarContext(this, vaultHook, bazaarManager, bagFactory, api, guiSessions, gui, config, storage);
+        context = new MMOBazaarContext(this, vaultHook, bazaarManager, bagFactory, api, gui, config, storage);
 
         // Register listeners
         final PluginManager pm = getServer().getPluginManager();
