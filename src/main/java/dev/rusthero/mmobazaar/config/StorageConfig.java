@@ -1,7 +1,7 @@
 package dev.rusthero.mmobazaar.config;
 
 import com.zaxxer.hikari.HikariConfig;
-import dev.rusthero.mmobazaar.storage.engine.SQLDialect;
+import dev.rusthero.mmobazaar.storage.SQLDialect;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;

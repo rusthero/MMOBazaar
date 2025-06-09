@@ -1,12 +1,12 @@
-package dev.rusthero.mmobazaar.storage.engine;
+package dev.rusthero.mmobazaar.storage;
 
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
 import dev.rusthero.mmobazaar.storage.api.BazaarStorage;
 import dev.rusthero.mmobazaar.storage.binding.BazaarBinder;
 import dev.rusthero.mmobazaar.storage.jdbc.UUIDAdapter;
 import dev.rusthero.mmobazaar.storage.mapping.BazaarMapper;
-import dev.rusthero.mmobazaar.storage.util.functional.SQLRunnable;
-import dev.rusthero.mmobazaar.storage.util.functional.SQLSupplier;
+import dev.rusthero.mmobazaar.storage.util.SQLRunnable;
+import dev.rusthero.mmobazaar.storage.util.SQLSupplier;
 import dev.rusthero.mmobazaar.util.LogUtil;
 
 import javax.sql.DataSource;

@@ -1,8 +1,11 @@
-package dev.rusthero.mmobazaar.storage.engine;
+package dev.rusthero.mmobazaar.storage;
 
 import com.zaxxer.hikari.HikariDataSource;
 import dev.rusthero.mmobazaar.config.StorageConfig;
 import dev.rusthero.mmobazaar.storage.api.BazaarStorage;
+import dev.rusthero.mmobazaar.storage.engine.MySQLStorage;
+import dev.rusthero.mmobazaar.storage.engine.PostgreSQLStorage;
+import dev.rusthero.mmobazaar.storage.engine.SQLiteStorage;
 
 import java.util.logging.Logger;
 

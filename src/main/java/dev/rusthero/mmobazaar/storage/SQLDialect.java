@@ -1,4 +1,4 @@
-package dev.rusthero.mmobazaar.storage.engine;
+package dev.rusthero.mmobazaar.storage;
 
 public enum SQLDialect {
     SQLITE, MYSQL, MARIADB, POSTGRES;

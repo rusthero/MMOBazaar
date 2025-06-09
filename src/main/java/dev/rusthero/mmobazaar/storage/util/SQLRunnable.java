@@ -1,4 +1,4 @@
-package dev.rusthero.mmobazaar.storage.util.functional;
+package dev.rusthero.mmobazaar.storage.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;

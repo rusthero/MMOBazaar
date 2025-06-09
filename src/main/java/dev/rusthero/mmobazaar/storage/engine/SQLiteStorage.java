@@ -1,6 +1,7 @@
 package dev.rusthero.mmobazaar.storage.engine;
 
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
+import dev.rusthero.mmobazaar.storage.SQLStorage;
 import dev.rusthero.mmobazaar.storage.schema.SQLSchema;
 import dev.rusthero.mmobazaar.storage.jdbc.UUIDAdapter;
 
