@@ -27,8 +27,6 @@ public class ConfirmPurchaseGUI {
     }
 
     public void open(Player player) {
-        context.guiSessions.setConfirmingGUI(player.getUniqueId(), this);
-
         Inventory gui = Bukkit.createInventory(null, 9, "§8Buy for §a$" + listing.getPrice());
 
         // Confirm Button
@@ -72,7 +70,6 @@ public class ConfirmPurchaseGUI {
         gui.setItem(5, cancel);
 
         player.openInventory(gui);
-
         context.guiSessions.setConfirmingGUI(player.getUniqueId(), this);
     }
 
