@@ -12,7 +12,7 @@ import dev.rusthero.mmobazaar.listener.BazaarBagUseListener;
 import dev.rusthero.mmobazaar.listener.BazaarInteractionListener;
 import dev.rusthero.mmobazaar.listener.GUIListener;
 import dev.rusthero.mmobazaar.storage.api.BazaarStorage;
-import dev.rusthero.mmobazaar.storage.util.SQLStorageFactory;
+import dev.rusthero.mmobazaar.storage.engine.SQLStorageFactory;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
