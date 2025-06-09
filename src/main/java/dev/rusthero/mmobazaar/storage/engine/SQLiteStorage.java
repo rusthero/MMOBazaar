@@ -32,7 +32,7 @@ public class SQLiteStorage extends SQLStorage {
     }
 
     @Override
-    public boolean saveAllBazaars(Collection<BazaarData> bazaars) {
+    public boolean saveBazaars(Collection<BazaarData> bazaars) {
         return runTransaction(conn -> batchInsertBazaars(conn, bazaars, SQLSchema.SQLite.INSERT_BAZAAR, SQLSchema.SQLite.INSERT_LISTING));
     }
 

@@ -13,18 +13,22 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BazaarCreateGUI {
+public class CreateGUI {
+    /***
+     * Used for checking if the player cancelled anvil gui while creating a bazaar.
+     */
+    private final Set<UUID> creationSession = ConcurrentHashMap.newKeySet();
+
     private final MMOBazaarContext context;
-    private final Set<UUID> completed = ConcurrentHashMap.newKeySet();
     private final ItemStack bag;
 
-    public BazaarCreateGUI(MMOBazaarContext context, ItemStack bag) {
+    public CreateGUI(MMOBazaarContext context, ItemStack bag) {
         this.context = context;
         this.bag = bag;
     }
 
     public void open(Player player) {
-        completed.remove(player.getUniqueId()); // Reset just in case
+        creationSession.remove(player.getUniqueId()); // Remove in case we weren't able to complete previously
 
         new AnvilGUI.Builder().plugin(context.plugin).title("Bazaar Name").text("Enter Name").itemLeft(new ItemStack(Material.NAME_TAG)).onClick((slot, state) -> {
             if (slot != AnvilGUI.Slot.OUTPUT) return List.of(); // only act on confirmation
@@ -58,7 +62,7 @@ public class BazaarCreateGUI {
             }
 
             return context.bazaarManager.createBazaar(player, name).map(data -> List.of(AnvilGUI.ResponseAction.run(() -> {
-                completed.add(player.getUniqueId());
+                creationSession.add(player.getUniqueId());
                 bag.setAmount(bag.getAmount() - 1);
                 player.sendMessage("§aBazaar created and §f$" + context.config.getCreationFee() + " §awithdrawn.");
             }), AnvilGUI.ResponseAction.close())).orElseGet(() -> {
@@ -66,7 +70,7 @@ public class BazaarCreateGUI {
                 return List.of(AnvilGUI.ResponseAction.close());
             });
         }).onClose(state -> {
-            if (!completed.contains(player.getUniqueId())) {
+            if (!creationSession.contains(player.getUniqueId())) {
                 player.sendMessage("§eBazaar creation cancelled.");
             }
         }).open(player);

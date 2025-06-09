@@ -29,7 +29,7 @@ public class MySQLStorage extends SQLStorage {
     }
 
     @Override
-    public boolean saveAllBazaars(Collection<BazaarData> bazaars) {
+    public boolean saveBazaars(Collection<BazaarData> bazaars) {
         return runTransaction(conn -> batchInsertBazaars(conn, bazaars, SQLSchema.MySQL.INSERT_BAZAAR, SQLSchema.MySQL.INSERT_LISTING));
     }
 

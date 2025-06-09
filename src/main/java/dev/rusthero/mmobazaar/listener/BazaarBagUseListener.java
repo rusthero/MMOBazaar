@@ -1,7 +1,7 @@
 package dev.rusthero.mmobazaar.listener;
 
 import dev.rusthero.mmobazaar.MMOBazaarContext;
-import dev.rusthero.mmobazaar.gui.BazaarCreateGUI;
+import dev.rusthero.mmobazaar.gui.CreateGUI;
 import dev.rusthero.mmobazaar.logic.BazaarCreationValidator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,7 +41,7 @@ public class BazaarBagUseListener implements Listener {
                     player.sendMessage("§cYou cannot have more than " + context.config.getMaxBazaarsPerPlayer() + " bazaars.");
             case SUCCESS -> {
                 player.sendMessage("§e[MMOBazaar] Starting market setup...");
-                new BazaarCreateGUI(context, item).open(player);
+                new CreateGUI(context, item).open(player);
             }
         }
     }

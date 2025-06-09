@@ -14,7 +14,7 @@ public interface BazaarStorage {
 
     boolean deleteBazaar(UUID bazaarId);
 
-    boolean saveAllBazaars(Collection<BazaarData> bazaars);
+    boolean saveBazaars(Collection<BazaarData> bazaars);
 
     Optional<BazaarData> loadBazaar(UUID bazaarId);
 

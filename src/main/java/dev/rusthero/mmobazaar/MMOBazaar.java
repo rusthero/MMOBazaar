@@ -7,17 +7,16 @@ import dev.rusthero.mmobazaar.commands.MMOBazaarCommand;
 import dev.rusthero.mmobazaar.config.BazaarConfig;
 import dev.rusthero.mmobazaar.config.StorageConfig;
 import dev.rusthero.mmobazaar.economy.VaultHook;
-import dev.rusthero.mmobazaar.gui.GUISessionManager;
+import dev.rusthero.mmobazaar.gui.api.GUIManager;
+import dev.rusthero.mmobazaar.gui.session.GUISessionManager;
 import dev.rusthero.mmobazaar.item.BazaarBagFactory;
 import dev.rusthero.mmobazaar.listener.BazaarBagUseListener;
-import dev.rusthero.mmobazaar.listener.BazaarGUIListener;
+import dev.rusthero.mmobazaar.listener.GUIListener;
 import dev.rusthero.mmobazaar.listener.BazaarInteractionListener;
 import dev.rusthero.mmobazaar.storage.api.BazaarStorage;
 import dev.rusthero.mmobazaar.storage.util.SQLStorageFactory;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -80,15 +79,16 @@ public class MMOBazaar extends JavaPlugin {
         final BazaarBagFactory bagFactory = new BazaarBagFactory(config.getCreationFee());
         final MMOBazaarAPI api = new MMOBazaarAPI(bagFactory);
         final GUISessionManager guiSessions = new GUISessionManager();
+        final GUIManager gui = new GUIManager(guiSessions);
 
         // Setup context bundle for easier access to MMOBazaar
-        context = new MMOBazaarContext(this, vaultHook, bazaarManager, bagFactory, api, guiSessions, config, storage);
+        context = new MMOBazaarContext(this, vaultHook, bazaarManager, bagFactory, api, guiSessions, gui, config, storage);
 
         // Register listeners
         final PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new BazaarBagUseListener(context), this);
         pm.registerEvents(new BazaarInteractionListener(context), this);
-        pm.registerEvents(new BazaarGUIListener(context), this);
+        pm.registerEvents(new GUIListener(context), this);
 
         // Set command executor
         Objects.requireNonNull(getCommand("mmobazaar")).setExecutor(new MMOBazaarCommand(api));
@@ -98,23 +98,16 @@ public class MMOBazaar extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (this.context != null) {
-            // Close all GUIs in case it is a reload to prevent item dupe. Rare but dangerous one
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (context.guiSessions.getOwnerGUI(player.getUniqueId()).isPresent()
-                        || context.guiSessions.getConfirmingGUI(player.getUniqueId()).isPresent()
-                        || context.guiSessions.getCustomerGUI(player.getUniqueId()).isPresent()) {
-                    player.closeInventory();
-                    player.sendMessage("§cBazaar GUI was forcibly closed due to reload.");
-                }
-            }
-        }
+        if (context == null) return;
+
+        // Close all GUIs, in case it is a server reload to prevent item dupe
+        context.gui.closeAllGUIs();
 
         // Save all bazaars in case
-        if (this.context != null && this.context.storage != null) {
+        if (context.storage != null) {
             try {
                 Collection<BazaarData> bazaars = this.context.bazaarManager.getAllBazaars();
-                this.context.storage.saveAllBazaars(bazaars);
+                this.context.storage.saveBazaars(bazaars);
                 getLogger().info("Saved all " + bazaars.size() + " bazaars to storage.");
             } catch (Exception e) {
                 getLogger().severe("Failed to save bazaars on shutdown: " + e.getMessage());

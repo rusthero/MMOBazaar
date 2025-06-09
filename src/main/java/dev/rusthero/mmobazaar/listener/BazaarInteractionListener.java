@@ -3,8 +3,8 @@ package dev.rusthero.mmobazaar.listener;
 import dev.rusthero.mmobazaar.MMOBazaar;
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
 import dev.rusthero.mmobazaar.MMOBazaarContext;
-import dev.rusthero.mmobazaar.gui.BazaarCustomerGUI;
-import dev.rusthero.mmobazaar.gui.BazaarOwnerGUI;
+import dev.rusthero.mmobazaar.gui.CustomerGUI;
+import dev.rusthero.mmobazaar.gui.OwnerGUI;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,15 +38,10 @@ public class BazaarInteractionListener implements Listener {
         event.setCancelled(true);
 
         Player player = event.getPlayer();
-
         if (bazaar.getOwner().equals(player.getUniqueId())) {
-            // Owner GUI
-            BazaarOwnerGUI gui = new BazaarOwnerGUI(context, bazaar);
-            gui.open(player);
+            context.gui.openOwnerGUI(player, new OwnerGUI(context, bazaar));
         } else {
-            // Customer GUI
-            BazaarCustomerGUI gui = new BazaarCustomerGUI(context, bazaar);
-            gui.open(player);
+            context.gui.openCustomerGUI(player, new CustomerGUI(context, bazaar));
         }
     }
 }
