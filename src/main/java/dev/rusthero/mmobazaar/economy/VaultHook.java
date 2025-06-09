@@ -17,8 +17,8 @@ public class VaultHook {
             return false;
         }
 
-        this.economy = provider.getProvider();
-        return this.economy != null;
+        economy = provider.getProvider();
+        return economy != null && economy.isEnabled();
     }
 
     public Economy getEconomy() {
