@@ -265,8 +265,6 @@ public class BazaarGUIListener implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) return;
 
         context.guiSessions.getOwnerGUI(player.getUniqueId()).ifPresent(gui -> {
-            System.out.println(ChatColor.stripColor(event.getView().getTitle()));
-            System.out.println(gui.getData().getName());
             // Soft check in case another inventory event
             if (!ChatColor.stripColor(event.getView().getTitle()).equalsIgnoreCase(gui.getData().getName())) {
                 context.guiSessions.removeOwnerGUI(player.getUniqueId());
