@@ -7,6 +7,7 @@ import dev.rusthero.mmobazaar.gui.api.BazaarGUI;
 import dev.rusthero.mmobazaar.gui.api.ClickableGUI;
 import dev.rusthero.mmobazaar.gui.api.DraggableGUI;
 import dev.rusthero.mmobazaar.item.util.ListingLoreUtil;
+import dev.rusthero.mmobazaar.util.ItemBuilder;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -41,12 +42,7 @@ public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
         }
 
         // Filler glass panes on final row
-        ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-        ItemMeta meta = glass.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(" ");
-            glass.setItemMeta(meta);
-        }
+        ItemStack glass = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build();
         for (int i = 27; i < 36; i++) {
             gui.setItem(i, glass);
         }
@@ -199,14 +195,11 @@ public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
     }
 
     private ItemStack makeButton(Material mat, String name, String... loreLines) {
-        ItemStack item = new ItemStack(mat);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(name);
-            meta.setLore(List.of(loreLines));
-            item.setItemMeta(meta);
+        ItemBuilder builder = new ItemBuilder(mat).setName(name);
+        for (String line : loreLines) {
+            builder.addLore(line);
         }
-        return item;
+        return builder.build();
     }
 
     private String formatTime(long millis) {
@@ -218,30 +211,12 @@ public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
     }
 
     private void updateBankButton(Inventory gui) {
-        ItemStack bank = new ItemStack(Material.GOLD_INGOT);
-        ItemMeta meta = bank.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName("§6Bazaar Bank");
-            List<String> lore = new ArrayList<>();
-            lore.add("§7Currently: §f$" + data.getBankBalance());
-            lore.add("§eClick to withdraw money from your bazaar");
-            meta.setLore(lore);
-            bank.setItemMeta(meta);
-        }
+        ItemStack bank = new ItemBuilder(Material.GOLD_INGOT).setName("§6Bazaar Bank").addLore("§7Currently: §f$" + data.getBankBalance()).addLore("§eClick to withdraw money from your bazaar").build();
         gui.setItem(30, bank);
     }
 
     private void updateTimeLeftButton(Inventory gui) {
-        ItemStack clock = new ItemStack(Material.CLOCK);
-        ItemMeta meta = clock.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName("§6Time Left");
-            List<String> lore = new ArrayList<>();
-            lore.add("§7" + formatTime(data.getExpiresAt() - System.currentTimeMillis()));
-            lore.add("§eClick to extend for §f$" + context.config.getExtensionFee());
-            meta.setLore(lore);
-            clock.setItemMeta(meta);
-        }
+        ItemStack clock = new ItemBuilder(Material.CLOCK).setName("§6Time Left").addLore("§7" + formatTime(data.getExpiresAt() - System.currentTimeMillis())).addLore("§eClick to extend for §f$" + context.config.getExtensionFee()).build();
         gui.setItem(32, clock);
     }
 

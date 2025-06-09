@@ -1,6 +1,6 @@
 package dev.rusthero.mmobazaar.commands;
 
-import dev.rusthero.mmobazaar.api.MMOBazaarAPI;
+import dev.rusthero.mmobazaar.MMOBazaarAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;

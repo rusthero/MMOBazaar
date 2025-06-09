@@ -1,4 +1,4 @@
-package dev.rusthero.mmobazaar.api;
+package dev.rusthero.mmobazaar;
 
 import dev.rusthero.mmobazaar.item.BazaarBagFactory;
 import org.bukkit.entity.Player;

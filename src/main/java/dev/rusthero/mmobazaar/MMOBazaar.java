@@ -1,6 +1,5 @@
 package dev.rusthero.mmobazaar;
 
-import dev.rusthero.mmobazaar.api.MMOBazaarAPI;
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
 import dev.rusthero.mmobazaar.bazaar.BazaarManager;
 import dev.rusthero.mmobazaar.commands.MMOBazaarCommand;
