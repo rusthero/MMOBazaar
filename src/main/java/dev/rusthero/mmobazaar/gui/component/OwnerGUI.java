@@ -3,12 +3,12 @@ package dev.rusthero.mmobazaar.gui.component;
 import dev.rusthero.mmobazaar.MMOBazaarContext;
 import dev.rusthero.mmobazaar.bazaar.BazaarData;
 import dev.rusthero.mmobazaar.bazaar.BazaarListing;
+import dev.rusthero.mmobazaar.gui.GUIItemFactory;
 import dev.rusthero.mmobazaar.gui.api.BazaarGUI;
 import dev.rusthero.mmobazaar.gui.api.ClickableGUI;
 import dev.rusthero.mmobazaar.gui.api.DraggableGUI;
 import dev.rusthero.mmobazaar.item.util.ListingLoreUtil;
 import dev.rusthero.mmobazaar.util.ItemBuilder;
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,19 +18,18 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
     private final MMOBazaarContext context;
     private final BazaarData data;
+    private final ListingPrompts prompts;
 
     public OwnerGUI(MMOBazaarContext context, BazaarData data) {
         this.context = context;
         this.data = data;
+        this.prompts = new ListingPrompts(context, data, this);
     }
 
     public Inventory getInventory(Player player) {
@@ -49,9 +48,9 @@ public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
 
         // Buttons
         updateBankButton(gui);
-        gui.setItem(31, makeButton(Material.BARRIER, "§cDelete Bazaar", "§7Removes the bazaar and refunds items"));
+        gui.setItem(31, GUIItemFactory.simpleButton(Material.BARRIER, "§cDelete Bazaar", "§7Removes the bazaar and refunds items"));
         updateTimeLeftButton(gui);
-        gui.setItem(35, makeButton(Material.COMPASS, "§bRotate Bazaar", "§7Click to rotate stand 15°"));
+        gui.setItem(35, GUIItemFactory.simpleButton(Material.COMPASS, "§bRotate Bazaar", "§7Click to rotate stand 15°"));
 
         return gui;
     }
@@ -77,7 +76,7 @@ public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
                 ItemStack droppedItem = cursor.clone();
                 player.setItemOnCursor(null); // Remove item on cursor to prevent duplication
 
-                openListingPrompt(player, clicked, droppedItem, slot);
+                prompts.openListingPrompt(player, clicked, droppedItem, slot);
                 return;
             }
 
@@ -87,7 +86,7 @@ public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
                 event.setCancelled(true);
 
                 if (event.getClick().isLeftClick()) {
-                    openEditPrompt(player, slot, existing);
+                    prompts.openEditPrompt(player, slot, existing);
                 } else if (event.getClick().isRightClick()) {
                     event.getClickedInventory().setItem(slot, new ItemStack(Material.AIR));
                     data.removeListing(slot);
@@ -194,30 +193,13 @@ public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
         updateSlot(owner.getOpenInventory().getTopInventory(), slot);
     }
 
-    private ItemStack makeButton(Material mat, String name, String... loreLines) {
-        ItemBuilder builder = new ItemBuilder(mat).setName(name);
-        for (String line : loreLines) {
-            builder.addLore(line);
-        }
-        return builder.build();
-    }
-
-    private String formatTime(long millis) {
-        long seconds = millis / 1000;
-        long minutes = (seconds / 60) % 60;
-        long hours = (seconds / 3600) % 24;
-        long days = seconds / 86400;
-        return days + "d " + hours + "h " + minutes + "m";
-    }
-
     private void updateBankButton(Inventory gui) {
-        ItemStack bank = new ItemBuilder(Material.GOLD_INGOT).setName("§6Bazaar Bank").addLore("§7Currently: §f$" + data.getBankBalance()).addLore("§eClick to withdraw money from your bazaar").build();
-        gui.setItem(30, bank);
+        gui.setItem(30, GUIItemFactory.bankButton(data.getBankBalance()));
     }
 
     private void updateTimeLeftButton(Inventory gui) {
-        ItemStack clock = new ItemBuilder(Material.CLOCK).setName("§6Time Left").addLore("§7" + formatTime(data.getExpiresAt() - System.currentTimeMillis())).addLore("§eClick to extend for §f$" + context.config.getExtensionFee()).build();
-        gui.setItem(32, clock);
+        long remaining = data.getExpiresAt() - System.currentTimeMillis();
+        gui.setItem(32, GUIItemFactory.timeLeftButton(remaining, context.config.getExtensionFee()));
     }
 
     public void updateSlot(Inventory gui, int slot) {
@@ -228,66 +210,6 @@ public class OwnerGUI implements ClickableGUI, DraggableGUI, BazaarGUI {
         } else {
             gui.setItem(slot, new ItemStack(Material.AIR));
         }
-    }
-
-    private void openListingPrompt(Player player, Inventory inventory, ItemStack item, int slot) {
-        new AnvilGUI.Builder().onClick((_s, stateSnapshot) -> {
-            try {
-                double price = Double.parseDouble(stateSnapshot.getText());
-                if (price <= 0) throw new NumberFormatException();
-
-                data.addListing(slot, item.clone(), price);
-                inventory.setItem(slot, ListingLoreUtil.withOwnerLore(item, price, Bukkit.getOfflinePlayer(data.getOwner()).getName()));
-
-                Bukkit.getScheduler().runTaskAsynchronously(context.plugin, () -> context.storage.saveBazaar(data));
-
-                context.gui.closeCustomerAndConfirmGUIsForAllPlayers(data);
-
-                player.sendMessage("§aItem listed for §f$" + price);
-            } catch (NumberFormatException e) {
-                player.sendMessage("§cInvalid price.");
-                // Item given back in onClose as slot will be empty
-            }
-            return List.of(AnvilGUI.ResponseAction.close(), AnvilGUI.ResponseAction.run(() -> getInventory(player)));
-        }).onClose(stateSnapshot -> {
-            // Return item if price wasn't set
-            if (!data.getListings().containsKey(slot)) {
-                returnItem(player, item);
-            }
-        }).text("10.0").itemLeft(new ItemStack(Material.NAME_TAG)).title("Enter Price").plugin(context.plugin).open(player);
-    }
-
-    private void returnItem(Player player, ItemStack item) {
-        HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(item);
-        for (ItemStack leftover : leftovers.values()) {
-            player.getWorld().dropItemNaturally(player.getLocation(), leftover);
-        }
-    }
-
-    private void openEditPrompt(Player player, int slot, BazaarListing listing) {
-        new AnvilGUI.Builder().plugin(context.plugin).title("Edit Price").text(String.valueOf(listing.getPrice())).itemLeft(new ItemStack(Material.NAME_TAG)).onClick((clickedSlot, state) -> {
-            if (clickedSlot != AnvilGUI.Slot.OUTPUT) return List.of();
-
-            try {
-                double newPrice = Double.parseDouble(state.getText());
-                if (newPrice <= 0) throw new NumberFormatException();
-
-                boolean updated = data.changeListingPrice(slot, newPrice);
-                if (updated) {
-                    Bukkit.getScheduler().runTaskAsynchronously(context.plugin, () -> context.storage.saveBazaar(data));
-
-                    context.gui.closeCustomerAndConfirmGUIsForAllPlayers(data);
-
-                    player.sendMessage("§aPrice updated to §f$" + newPrice);
-                } else {
-                    player.sendMessage("§cFailed to update price: listing not found.");
-                }
-            } catch (NumberFormatException e) {
-                player.sendMessage("§cInvalid price.");
-            }
-
-            return List.of(AnvilGUI.ResponseAction.close(), AnvilGUI.ResponseAction.run(() -> getInventory(player)));
-        }).open(player);
     }
 
     @Override

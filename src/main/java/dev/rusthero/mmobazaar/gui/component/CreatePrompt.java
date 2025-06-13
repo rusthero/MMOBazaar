@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CreateGUI {
+public class CreatePrompt {
     /***
      * Used for checking if the player cancelled anvil gui while creating a bazaar.
      */
@@ -22,7 +22,7 @@ public class CreateGUI {
     private final MMOBazaarContext context;
     private final ItemStack bag;
 
-    public CreateGUI(MMOBazaarContext context, ItemStack bag) {
+    public CreatePrompt(MMOBazaarContext context, ItemStack bag) {
         this.context = context;
         this.bag = bag;
     }

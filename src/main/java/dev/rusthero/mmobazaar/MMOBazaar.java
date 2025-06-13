@@ -75,11 +75,10 @@ public class MMOBazaar extends JavaPlugin {
         });
 
         final BazaarBagFactory bagFactory = new BazaarBagFactory(config.getCreationFee());
-        final MMOBazaarAPI api = new MMOBazaarAPI(bagFactory);
         final GUIManager gui = new GUIManager();
 
         // Setup context bundle for easier access to MMOBazaar
-        context = new MMOBazaarContext(this, vaultHook, bazaarManager, bagFactory, api, gui, config, storage);
+        context = new MMOBazaarContext(this, vaultHook, bazaarManager, bagFactory, gui, config, storage);
 
         // Register listeners
         final PluginManager pm = getServer().getPluginManager();
@@ -88,7 +87,7 @@ public class MMOBazaar extends JavaPlugin {
         pm.registerEvents(new GUIListener(context), this);
 
         // Set command executor
-        Objects.requireNonNull(getCommand("mmobazaar")).setExecutor(new MMOBazaarCommand(api));
+        Objects.requireNonNull(getCommand("mmobazaar")).setExecutor(new MMOBazaarCommand(config.getCreationFee()));
 
         getLogger().info("MMOBazaar enabled.");
     }

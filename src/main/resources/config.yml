@@ -1,3 +1,5 @@
+language: en
+
 bazaar:
   max-per-player: 3
   creation-fee: 1000.0

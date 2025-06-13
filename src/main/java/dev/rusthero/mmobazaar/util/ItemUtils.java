@@ -1,13 +1,13 @@
-package dev.rusthero.mmobazaar;
+package dev.rusthero.mmobazaar.util;
 
 import dev.rusthero.mmobazaar.item.BazaarBagFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class MMOBazaarAPI {
+public class ItemUtils {
     private final BazaarBagFactory factory;
 
-    public MMOBazaarAPI(BazaarBagFactory factory) {
+    public ItemUtils(BazaarBagFactory factory) {
         this.factory = factory;
     }
 

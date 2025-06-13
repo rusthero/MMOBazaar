@@ -1,16 +1,17 @@
 package dev.rusthero.mmobazaar.commands;
 
-import dev.rusthero.mmobazaar.MMOBazaarAPI;
+import dev.rusthero.mmobazaar.item.BazaarBagFactory;
+import dev.rusthero.mmobazaar.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class MMOBazaarCommand implements CommandExecutor {
-    private final MMOBazaarAPI api;
+    private final ItemUtils itemUtils;
 
-    public MMOBazaarCommand(MMOBazaarAPI api) {
-        this.api = api;
+    public MMOBazaarCommand(double creationFee) {
+        this.itemUtils = new ItemUtils(new BazaarBagFactory(creationFee));
     }
 
     @Override
@@ -33,7 +34,7 @@ public class MMOBazaarCommand implements CommandExecutor {
                 }
             }
 
-            api.giveBazaarBag(target, amount);
+            itemUtils.giveBazaarBag(target, amount);
             sender.sendMessage("§a[MMOBazaar] Gave " + amount + "x Market Bag to " + target.getName());
             return true;
         }

@@ -1,7 +1,7 @@
 package dev.rusthero.mmobazaar.listener;
 
 import dev.rusthero.mmobazaar.MMOBazaarContext;
-import dev.rusthero.mmobazaar.gui.component.CreateGUI;
+import dev.rusthero.mmobazaar.gui.component.CreatePrompt;
 import dev.rusthero.mmobazaar.logic.BazaarCreationValidator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +22,7 @@ public class BazaarBagUseListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Ignore offhand and empty interacts, right click only
         if (event.getHand() != EquipmentSlot.HAND) return;
-        ItemStack item = event.getItem();
+        final ItemStack item = event.getItem();
         if (item == null || item.getType().isAir()) return;
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         // Check if item is bazaar bag
@@ -30,10 +30,8 @@ public class BazaarBagUseListener implements Listener {
 
         event.setCancelled(true); // Cancel in case player does actually interact with something
 
-        Player player = event.getPlayer();
-
-        BazaarCreationValidator.Result result = BazaarCreationValidator.canCreate(context, player);
-        switch (result) {
+        final Player player = event.getPlayer();
+        switch (BazaarCreationValidator.canCreate(context, player)) {
             case MISSING_BAZAAR_BAG -> player.sendMessage("§cYou need a bazaar bag to open bazaar");
             case INSUFFICIENT_FUNDS ->
                     player.sendMessage("§cYou need at least §f$" + context.config.getCreationFee() + " §cto open a bazaar.");
@@ -41,7 +39,7 @@ public class BazaarBagUseListener implements Listener {
                     player.sendMessage("§cYou cannot have more than " + context.config.getMaxBazaarsPerPlayer() + " bazaars.");
             case SUCCESS -> {
                 player.sendMessage("§e[MMOBazaar] Starting market setup...");
-                new CreateGUI(context, item).open(player);
+                new CreatePrompt(context, item).open(player);
             }
         }
     }
